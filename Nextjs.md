@@ -1193,4 +1193,4 @@ export default Providers;
 
 ### USING useQuery and useMutation HOOKS
 
-Now to use this hooks in our Route segment folder
+Now to use this hooks in our Route segment folder[Nextjs.md](https://github.com/user-attachments/files/16393531/Nextjs.md)
