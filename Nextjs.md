@@ -1,26 +1,26 @@
 # REACT AND NEXTJS INTRO 😎
 
 ### REACT JS AND REACT HOOKS
-== REACT JS (MAIN BASE FOR FRONTEND)
-==  use client  
-==  use server 
+- REACT JS (MAIN BASE FOR FRONTEND)
+-  use client  
+-  use server 
 
-==  useFormStatus 
-==  useFormState 
-==  useEffect
+-  useFormStatus 
+-  useFormState 
+-  useEffect
 
 ### STYLING AND CSS ✨
 
-== Tailwind CSS
-== Daisy UI
-== Material UI
-== Provider {react-hot-toast}
+- Tailwind CSS
+- Daisy UI
+- Material UI
+- Provider {react-hot-toast}
 
 
 
 # NEXTJS 🔥
 
-== It is an react framework use to build the fullstack application.
+- It is an react framework use to build the fullstack application.
 
 
 ## INSTALLATION
@@ -40,15 +40,16 @@ npm install @clerk/nextjs@latest @prisma/client@latest @tanstack/react-query@lat
 
 ## Tailwind and DaisyUI  🎆
 
-== Install the npm package :-
+- Install the npm package :-
 
 ```js
 npm i -D daisyui@latest @tailwindcss/typography@latest prisma@latest
 ```
 
-== Also add the plugin in 'tailwind.config.js' :-
+- Also add the plugin in 'tailwind.config.js' :-
 
 ```javascript
+tailwind.config.js
 
 module.exports = {
   ...
@@ -63,19 +64,19 @@ module.exports = {
 
 ## FILE AND FOLDER STRUCTURE
 
-== The folders will contain all our .jsx pages and will be used for routing.
+- The folders will contain all our .jsx pages and will be used for routing.
 
 
 
 ## ROOT LAYOUTS (Required) { layout.js }
 
-== layouts preserve state, remain interactive, and do not re-render. Layouts can also be nested.
-== The component should accept a {children} prop that will be populated with a child layout (if it exists) or a page during rendering.
+- layouts preserve state, remain interactive, and do not re-render. Layouts can also be nested.
+- The component should accept a {children} prop that will be populated with a child layout (if it exists) or a page during rendering.
 
-== The root layout { layout.js } is defined at the top level of the app directory and applies to all routes.
-== This layout is required and must contain html and body tags, allowing you to modify the initial HTML returned from the server.
-== By default { NextJs } will automatically insert the { layout.js } file in our { app directory }.
-== When a {layout.js} and {page.js} file are defined in the same folder, the layout will wrap the page.
+- The root layout { layout.js } is defined at the top level of the app directory and applies to all routes.
+- This layout is required and must contain html and body tags, allowing you to modify the initial HTML returned from the server.
+- By default { NextJs } will automatically insert the { layout.js } file in our { app directory }.
+- When a {layout.js} and {page.js} file are defined in the same folder, the layout will wrap the page.
 
 ### CODE SYNTAX FOR {layout.js}. THIS WILL REMAIN ALMOST SAME.
 
@@ -115,11 +116,11 @@ export default function RootLayout({ children }) {
 
 ## ROUTES
 
-== By 'Link' Component we can add routes to our page.
-==> You can use it by importing it from next/link, and passing a href prop to the component:
-== HERE, { Clients, Drinks, Prisma, Task,  } IS EXAMPLE OF { ROUTE SEGMENTS FOLDER }.
-== THIS FOLDER IS CALLED { ROUTE SEGEMNTS FOLDER }
-== Create a folder in the 'app' directory and inside it create a page.js (.jsx) file. The folder name becomes the route segment in the project.
+- By 'Link' Component we can add routes to our page.
+- You can use it by importing it from next/link, and passing a href prop to the component:
+- HERE, { Clients, Drinks, Prisma, Task,  } IS EXAMPLE OF { ROUTE SEGMENTS FOLDER }.
+- THIS FOLDER IS CALLED { ROUTE SEGEMNTS FOLDER }
+- Create a folder in the 'app' directory and inside it create a page.js (.jsx) file. The folder name becomes the route segment in the project.
 
 ```js
 // SIMPLE EXAMPLE TO USE 'LINK' COMPONENTS
@@ -149,9 +150,9 @@ async function HomePage(){
 
 ## LOADING UI (loading.jsx) 
 
-== THIS IS PRESENT INSIDE { ROUTE SEGEMNTS FOLDER  } WHICH WILL AUTOMATICALLY WRAP THE { page.jsx }
-== The special file loading.js helps you create meaningful Loading UI with React.
-== With this convention, you can show an instant loading state from the server while the content of a route segment loads. The new content is automatically swapped in once rendering is complete.
+- THIS IS PRESENT INSIDE { ROUTE SEGEMNTS FOLDER  } WHICH WILL AUTOMATICALLY WRAP THE { page.jsx }
+- The special file loading.js helps you create meaningful Loading UI with React.
+- With this convention, you can show an instant loading state from the server while the content of a route segment loads. The new content is automatically swapped in once rendering is complete.
 
 ### SYNTAX FOR   (loading.jsx)
 ```javascript
@@ -173,7 +174,7 @@ export default Loading;
 
 ## ERROR HANDLING UI (error.jsx) 
 
-== THE SIMPLE EXAMPLE OF HANDLING THE ERROR BY USING { error.jsx } FILE IS :==>
+- THE SIMPLE EXAMPLE OF HANDLING THE ERROR BY USING { error.jsx } FILE IS :==>
 
 
 ```javascript
@@ -200,9 +201,9 @@ export default error;
 
 ## NESTED LAYOUTS 
 
-== THIS IS THE SIMPLE EXAMPLE OF NESTED LAYOUTS
-== { /Drinks/layout.jsx  ||  /Drinks/loading.jsx  ||  /Drinks/error.jsx }   THIS IS THE EXAMPLE OF NESTED LAYOUTS
-== NESTED Layouts preserve state, remain interactive, and do not re-render. Layouts can also be nested.
+- THIS IS THE SIMPLE EXAMPLE OF NESTED LAYOUTS
+- { /Drinks/layout.jsx  ||  /Drinks/loading.jsx  ||  /Drinks/error.jsx }   THIS IS THE EXAMPLE OF NESTED LAYOUTS
+- NESTED Layouts preserve state, remain interactive, and do not re-render. Layouts can also be nested.
 
 
 ```javascript
@@ -226,28 +227,28 @@ export default DrinksLayoutPage;
 
 ## SERVER COMPONENTS 
 
-== BY DEFAULT, NEXTJS USES SERVER COMPONENTS !!!!
-== Fetching Data: They can fetch data directly from the server, avoiding the need for additional API calls from the client.
-== Rendering on the Server: Server components are rendered on the server, which means they don't include client-side JavaScript in the final output sent to the browser.
-== BASICALLY, ALL THE HTTPS REQUEST { GET, POST, PUT, PATCH, DELETE } ARE NOTHING BUT SERVER COMPONENTS.
+- BY DEFAULT, NEXTJS USES SERVER COMPONENTS !!!!
+- Fetching Data: They can fetch data directly from the server, avoiding the need for additional API calls from the client.
+- Rendering on the Server: Server components are rendered on the server, which means they don't include client-side JavaScript in the final output sent to the browser.
+- BASICALLY, ALL THE HTTPS REQUEST { GET, POST, PUT, PATCH, DELETE } ARE NOTHING BUT SERVER COMPONENTS.
 
 
 ## CLIENT COMPONENTS 
 
-== Client Components allow you to write interactive UI that is prerendered on the server and can use client JavaScript to run in the browser.
-== Interactivity: Client Components can use use state, effects, and event listeners, meaning they can provide immediate feedback to the user and update the UI.
-== Browser APIs: Client Components have access to browser APIs
-== To use Client Components, you can add the React "use client" directive at the top of a file, above your imports.
-== "use client" is used to declare a boundary between a Server and Client Component modules.
+- Client Components allow you to write interactive UI that is prerendered on the server and can use client JavaScript to run in the browser.
+- Interactivity: Client Components can use use state, effects, and event listeners, meaning they can provide immediate feedback to the user and update the UI.
+- Browser APIs: Client Components have access to browser APIs
+- To use Client Components, you can add the React "use client" directive at the top of a file, above your imports.
+- "use client" is used to declare a boundary between a Server and Client Component modules.
 
 
 
 
 ## Fetch Data in Server Components 🚀🚀🚀
 
-== just add async and start using await 
-== RATHER, WE CAN USE {AXIOS} FOR FETCHING AN API'S 
-== the same for db
+- just add async and start using await 
+- RATHER, WE CAN USE {AXIOS} FOR FETCHING AN API'S 
+- the same for db
 
 
 
@@ -284,9 +285,9 @@ async function HandleFetchData(){
 
 ## DYNAMIC ROUTES 
 
-== A Dynamic Segment can be created by wrapping a folder's name in square brackets: [folderName]. For example, [id]
-== Dynamic Segments are passed as the {params} prop to layout, page, route  functions.
-== For example, a { Drinks } could include the following route {  app/Drinks/[id]/page.jsx  } where [id] is the Dynamic Segment for Drinks Lists.
+- A Dynamic Segment can be created by wrapping a folder's name in square brackets: [folderName]. For example, [id]
+- Dynamic Segments are passed as the {params} prop to layout, page, route  functions.
+- For example, a { Drinks } could include the following route {  app/Drinks/[id]/page.jsx  } where [id] is the Dynamic Segment for Drinks Lists.
 
 
 // THIS IS AN SIMPLE EXAMPLE OF DYNAMIC ROUTING.
@@ -317,11 +318,11 @@ function DynamicDrinksPage({ params }){
 
 ## PRISMA  💰
 
-== Prisma ORM is a database toolkit that simplifies database access in web applications.
-==  It allows developers to interact with databases using a type-safe and auto-generated API, making database operations easier and more secure.
+- Prisma ORM is a database toolkit that simplifies database access in web applications.
+- It allows developers to interact with databases using a type-safe and auto-generated API, making database operations easier and more secure.
 
-===> Prisma server: A standalone infrastructure component sitting on top of your database.
-===> Prisma client: An auto-generated library that connects to the Prisma server and lets you read, write and stream data in your database. It is used for data access in your applications.
+1. Prisma server: A standalone infrastructure component sitting on top of your database.
+2. Prisma client: An auto-generated library that connects to the Prisma server and lets you read, write and stream data in your database. It is used for data access in your applications.
 
 ## -------------------------------------------------------------------------------------------//
 
@@ -336,14 +337,14 @@ npx prisma init
 
 ```
 
-==  This creates a new prisma directory with your Prisma schema file and configures SQLite as your database
+-  This creates a new prisma directory with your Prisma schema file and configures SQLite as your database
 
 ## -------------------------------------------------------------------------------------------//
 
 
 ## SETUP PRISMA {GENERATOR AND DATASOURCE} 
 
-== Now, inside { schema.prisma } Setup and modify the { generator and datasource }
+- Now, inside { schema.prisma } Setup and modify the { generator and datasource }
 
 
 ```javascript
@@ -368,12 +369,12 @@ datasource db {
 ```javascript
 DATABASE_URL="file:./dev.db"      { .env }
 ```
-== ADD  { .env } IN { .gitignore }
+- ADD  { .env } IN { .gitignore }
 
 ## -------------------------------------------------------------------------------------------//
 
-== This in turn initializes a new PrismaClient instance each time due to hot reloading that creates a connection to the database.
-== CREATE NEW FOLDER { utils } and THEN ADD { db.ts } FILE INSIDE AN FOLDER.
+- This in turn initializes a new PrismaClient instance each time due to hot reloading that creates a connection to the database.
+- CREATE NEW FOLDER { utils } and THEN ADD { db.ts } FILE INSIDE AN FOLDER.
 
 
 
@@ -395,7 +396,7 @@ const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
 
 export default prisma
 
-if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
+if (process.env.NODE_ENV != 'production') globalThis.prismaGlobal = prisma
 
 ```
 
@@ -403,10 +404,10 @@ if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
 
 ## PRISMA MODEL 
 
-== Prisma models are defined in the Prisma schema
-== the term "model" refers to an abstraction that maps to a table in your database.
-== Each model in the Prisma schema corresponds to a table in the database,
-== and each field within a model corresponds to a column in that table
+- Prisma models are defined in the Prisma schema
+- the term "model" refers to an abstraction that maps to a table in your database.
+- Each model in the Prisma schema corresponds to a table in the database,
+- and each field within a model corresponds to a column in that table
 
 
 ```javascript
@@ -461,7 +462,7 @@ npx prisma db push
 
 ## CONNECT OUR DATABASE WITH FRONTEND AND BACKEND 
 
-== INSIDE THE { page.jsx }
+- INSIDE THE { page.jsx }
 
 
 
@@ -546,9 +547,9 @@ async function createTask(){
     );
 }
 ```
-== 'use server' directive is used to store the user input data.
-== 'formData' can be used only inside the 'use server' directive
-== 'form' tag should take an attribute of 'action' and passed the function 'handleAction'
+- 'use server' directive is used to store the user input data.
+- 'formData' can be used only inside the 'use server' directive
+- 'form' tag should take an attribute of 'action' and passed the function 'handleAction'
 
 ## -------------------------------------------------------------------------------------------//
 
@@ -589,8 +590,8 @@ async function readTask(){
 }
 ```
 
-== By 'findMany' we can get all the tasks as return.
-== We also have 'findUnique' method and just passed the 'where' condition.
+- By 'findMany' we can get all the tasks as return.
+- We also have 'findUnique' method and just passed the 'where' condition.
 
 ## -------------------------------------------------------------------------------------------//
 
@@ -656,7 +657,7 @@ async function editForm({id}){
 <input type="hidden" name="taskId" value={id}/>
 ```
 
-== THIS INPUT TAG WHICH IS SET HIDDEN, WILL GET US THE ' taskId ' OF SELECTED TASK.
+- THIS INPUT TAG WHICH IS SET HIDDEN, WILL GET US THE ' taskId ' OF SELECTED TASK.
 
 
 
@@ -709,23 +710,23 @@ async function DeleteForm(props){
 <input type="hidden" name="taskId" value={id}/>
 ```
 
-== AGAIN, WE HAVE USED THE SAME METHOD OF 'INPUT TAG', WHICH WILL RETURN US THE ' TASKID ' WHICH HAS TO BE DELETED.
+- AGAIN, WE HAVE USED THE SAME METHOD OF 'INPUT TAG', WHICH WILL RETURN US THE ' TASKID ' WHICH HAS TO BE DELETED.
 
 
 ## -------------------------------------------------------------------------------------------//
 
 ## Server Actions
 
-== Server Actions are asynchronous functions that are executed on the server. 
-== They can be used in Server and Client Components to handle form submissions and data mutations in Next.js applications.
+- Server Actions are asynchronous functions that are executed on the server. 
+- They can be used in Server and Client Components to handle form submissions and data mutations in Next.js applications.
 
 
 
 ### FORMS   (formData)
 
-==  'form' element to allow Server Actions to be invoked with the {action} attribute.
-== the action automatically receives the FormData object.
-== You don't need to use React useState to manage fields, instead, you can extract the data using the native FormData methods.
+-  'form' element to allow Server Actions to be invoked with the {action} attribute.
+- the action automatically receives the FormData object.
+- You don't need to use React useState to manage fields, instead, you can extract the data using the native FormData methods.
 
 ```javascript
 
@@ -757,9 +758,9 @@ async function taskForm(){
 
 ### PENDING STATES  (useFormStatus)
 
-== You can use the React useFormStatus hook to show a pending state while the form is being submitted.
-== "useFormStatus" returns the status for a specific <form>, so it must be defined as a child of the <form> element.
-== It can be used inside an "client components".
+- You can use the React useFormStatus hook to show a pending state while the form is being submitted.
+- "useFormStatus" returns the status for a specific <form>, so it must be defined as a child of the <form> element.
+- It can be used inside an "client components".
 
 ```js
 
@@ -788,8 +789,8 @@ export function SubmitButton() {
 
 ### FORM STATE MANAGEMENT   (useFormState)
 
-== Once the fields have been validated on the server, you can return a serializable object in your action
-== and use the React useFormState hook to show a message to the user.
+- Once the fields have been validated on the server, you can return a serializable object in your action
+- and use the React useFormState hook to show a message to the user.
 
 
 ```js
@@ -814,7 +815,7 @@ export async function handleAction(prevState, formData) {
 };
 
 ```
-== Then, you can pass your action to the 'useFormState' hook and use the returned state to display an error message.
+- Then, you can pass your action to the 'useFormState' hook and use the returned state to display an error message.
 
 ```js
 
@@ -912,7 +913,7 @@ export default function RootLayout({ children }) {
 "build": "npx prisma generate && next build",
 ```
 
-== START THE 'LOCAL BUILD' WHEN YOUR DB IS HOST ON CLOUD.
+- START THE 'LOCAL BUILD' WHEN YOUR DB IS HOST ON CLOUD.
 
 ```javascript
 npm run build
@@ -921,7 +922,7 @@ npm start
 
 ### NOTE 
 
-== WHEN WE ARE BUILDING LOCALLY, CHECK WHICH ROUTE SEGMENT FOLDER IS STATIC OR DYNAMIC.
+- WHEN WE ARE BUILDING LOCALLY, CHECK WHICH ROUTE SEGMENT FOLDER IS STATIC OR DYNAMIC.
 
 ```javascript
 ○  (Static)   prerendered as static content
@@ -929,8 +930,8 @@ npm start
 ```
 
 
-== IF WE NEED TO CHANGE ANY ROUTE SEGMENT FOLDER TO DYNAMIC.
-== THEN INSERT THE FOLLOWING CODE IN  'page.jsx'
+- IF WE NEED TO CHANGE ANY ROUTE SEGMENT FOLDER TO DYNAMIC.
+- THEN INSERT THE FOLLOWING CODE IN  'page.jsx'
 
 ##### page.jsx
 
@@ -941,11 +942,11 @@ export const dynamic = 'force-dynamic';
 
 ## DEPLOY  (VERCEL) 🌐
 
-== sign up for account
-== create github repo
-== IMPORT THE GITHUB REPO TO HOST OUR WEBAPP
+- sign up for account
+- create github repo
+- IMPORT THE GITHUB REPO TO HOST OUR WEBAPP
 
-== COMMIT THE CHANGES, TO APPLY CHANGES IN OUR LIVE APP.
+- COMMIT THE CHANGES, TO APPLY CHANGES IN OUR LIVE APP.
 
 
 
@@ -954,9 +955,9 @@ export const dynamic = 'force-dynamic';
 
 ## CLERK AUTHENTICATION
 
-== create account
-== create new application
-== complete Next.js setup
+- create account
+- create new application
+- complete Next.js setup
 
 
 ```js
@@ -972,7 +973,7 @@ CLERK_SECRET_KEY = your_secret_key;
 
 ```
 
-== Add (.env.local) IN (.gitignore)
+- Add (.env.local) IN (.gitignore)
 
 
 ### middleware.ts
@@ -999,7 +1000,7 @@ export const config = {
 
 ### app/layout.js
 
-== Wrap the HTML element inside <ClerkProvider>
+- Wrap the HTML element inside <ClerkProvider>
 
 ```js
 // UPDATE layout.js file
@@ -1072,7 +1073,7 @@ export default UserProfilePage;
 ### THEME TOGGLE USING DAISY UI
 
 ```js
-// tailwind.config.js
+//  tailwind.config.js
 
 {
   daisyui: {
@@ -1083,7 +1084,7 @@ export default UserProfilePage;
 // CHECK DAISY UI FOR MORE THEME
 ```
 
-Create ThemeToggle.jsx component
+- Create ThemeToggle.jsx component
 
 ```js
 //  /components/ThemeToggle.jsx
@@ -1125,7 +1126,7 @@ export default ThemeToggle;
 
 ### TO CREATE A COMMON (layout.js) FILE FOR ALL ROUTE SEGMENT FOLDER
 
-Create (app/(dashboard)/layout.jsx). This will be the common layout.js file for all route segment folder.
+- Create (app/(dashboard)/layout.jsx). This will be the common layout.js file for all route segment folder.
 
 ```js
 function LayoutPage({children}){
@@ -1153,7 +1154,7 @@ npm i @tanstack/react-query @tanstack/react-query-devtools
 
 ### BASIC SETUP
 
-Update  app/providers.js file
+- Update  app/providers.js file
 
 ```JS
 // providers.js
@@ -1193,4 +1194,380 @@ export default Providers;
 
 ### USING useQuery and useMutation HOOKS
 
-Now to use this hooks in our Route segment folder[Nextjs.md](https://github.com/user-attachments/files/16393531/Nextjs.md)
+- Now to use this hooks in our Route segment folder, We need to wrap the page.jsx file with queryClient.
+
+```js
+// app/Chat/page.jsx
+
+import React from "react";
+import {
+    dehydrate,
+    HydrationBoundary,
+    QueryClient,
+} from '@tanstack/react-query';
+
+
+async function ChatPage(){
+
+  await new Promise((resolve) => { setTimeout(resolve, 1000) });
+
+    // THIS WILL CREATE NEW QUERY CLIENT.
+    const queryClient = new QueryClient();
+    
+    return (
+        <HydrationBoundary state={dehydrate(queryClient)}>
+            {/* CONTENT/COMPONENTS SHOULD BE WRAP BETWEEN THIS BOUNDARY. */}
+            <Component />
+        </HydrationBoundary>
+    );
+}
+
+
+```
+
+
+### useQuery Hooks (READ)
+
+- A query can be used with any Promise based method (including GET and POST and FETCHING DATA FROM DATABASE) to fetch data from a server.
+
+- Caching: Automatically caches the fetched data.
+- Automatic Refetching: Automatically refetches data when the query key changes or when the component remounts.
+- Data Synchronization: Keeps multiple components in sync with the same data.
+
+```js
+'use client'
+import { useQuery } from '@tanstack/react-query';
+
+
+async function Todos() {
+
+  const { isPending, data, isError } = useQuery({
+    queryKey: ['todos', item],
+    queryFn: () => fetchListItem(item), 
+  });
+
+  if (isPending) {
+    return <span className="loading loading-dots loading-lg"></span>
+  }
+  
+
+  // If the query is in an "isSuccess" state, the data is available via the "data" property.
+  return (
+    <div>
+      <ul>
+        {data.map((todo) => (
+          <li key={todo.id}>{todo.title}</li>
+        ))}
+      </ul>
+      <button 
+        type="button"
+        disabled={isPending}
+        value={isPending ? "Please Wait..." : "Add Item"}
+      />
+    </div>
+    
+  )
+}
+
+export {Todos}
+```
+
+#### queryKey : This helps React Query to uniquely identify and cache the result of the query. This means that if the same queryKey is used again, React Query can return the cached result instead of making a new network request.
+
+#### queryFn : A query function can be literally any function that returns a promise. The promise that is returned should either resolve the data or throw an error. 'The fetch data is stored in data variable.'
+
+
+
+
+### useMutation Hooks  (CREATE/UPDATE/DELETE)
+
+- Mutations are typically used to create/update/delete data or perform server side-effects. 
+- It is primarily used for write operations where you are sending data to a server.
+
+```js
+'use client';
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import {createItem} from "../utils/action.jsx";
+
+function TodosPage(){
+
+  let [item, setItem] = useState('');
+
+  let {mutate, isPending, data} = useMutation({
+    mutationFn: async (item) =>{ await createItem(item)},
+    onSuccess: (data)=>{
+      if(!data){
+        toast.error("An error occured");
+      }
+      return data;
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setItem(e.target.value);
+    mutate(item);
+  };
+
+
+  return (
+    <div>
+      {
+        data.map((item)=>{
+          return (
+            <h1>{item.content}</h1>
+          );
+        })
+      }
+
+      <button 
+        type="button"
+        disabled={isPending}
+        value={isPending ? "Please Wait..." : "Add Item"}
+      />
+
+    </div>
+
+  );
+}
+
+```
+
+- The most useful and popular use of useMutation is its async nature.
+- We Know that we cannot use react hooks inside server components. Hence, we will declare 'use client' directive at top.
+- With the help of 'useMutation' we can use  server-side logic or components.
+
+
+
+### SEARCH FUNCTIONALITY USING REACT QUERY
+
+- Here we can use 'useQuery' Hooks to add search functionality in our web application.
+- We can set an input form for which we are searching an term.
+
+
+
+```js
+// utils/action.jsx
+
+async function getAllListItem(searchTerm) {
+    if (!searchTerm) {
+        let items = await prisma.tour.findMany({
+            orderBy: {
+                item: 'asc',
+            }
+        });
+        return items;
+    }
+
+    let items = await prisma.tour.findMany({
+        where: {
+            OR: [
+                {
+                    item: {
+                        contains: searchTerm
+                    },
+                },
+            ]
+        },
+        orderBy: {
+            item: 'asc'
+        }
+    });
+    return items;
+}
+
+This utility func will return all list item
+
+// THIS IS COMPONENT FOR OUR SEARCH FUNCTIONALITY. 
+
+'use client';
+import { useQuery } from '@tanstack/react-query';
+import {getAllListItem} from "../utils/action.jsx";
+import {displayItemList} from "../components/displayItemList";
+
+function ItemPage(){
+
+  let [search, setSearch] = React.useState('');
+  let { data, isPending } = useQuery({
+    queryKey: ['items', search],
+    queryFn: () => getAllListItem(search), 
+  }); 
+
+
+  return (
+    <div>
+      <form> 
+        <div className='join mt-4 mb-16 w-full'>
+          <input 
+            type="text" 
+            placeholder="Enter Item..." 
+            className="input input-bordered w-full max-w-xs join-item" 
+            value={search}
+            onChange={(e)=>{setSearch(e.target.value)}}
+          />
+          <button 
+            type='button' 
+            className='btn join-item btn-primary'
+            disabled={isPending}
+            onClick={()=>{setSearch('')}}
+          >
+            {isPending ? "Please wait..." : "Search"}
+          </button>
+        </div>
+      </form>
+      {
+        isPending ? <span className="loading loading-dots loading-lg"></span> : <displayItemList data={data}></displayItemList>
+      }
+    </div>
+  )
+
+}
+
+```
+
+
+
+## INTRODUCTION TO GENAI.
+
+
+- AI :- It is the theory and development of computer system able to perform tasks normally requiring human intelligence.
+- ML :- It is the sub-field of AI, which trains a model from input data. And, the trained model can make useful prediction from new or never-before-seen data drawn from the same one used to train model.
+- DL :- It uses Artificial neural network - allowing them to process more complex patterns than traditional machine learning.
+
+
+
+#### DEEP LEARNING MODEL TYPES
+
+- "Discriminative Model" :-  This will Describe, Detect and Classify the input Data.
+
+- "Generative Model" :-  This will Create, Generate the new content for input Data.
+
+
+### GENERATIVE AI 
+
+- GenAI is a subset of Deep Learning.
+
+<!-- - It uses Artificial neural network and can process both labelled and unlabelled data using supervise, un-supervise and semi-supervise methods. -->
+
+- It is a type of AI that creates new content based on what it has learned from existing content.
+
+<!-- - Generative language model ingest very large data from multiple source across internet and create new content. -->
+
+- GenAI depends a lot on the training data that we provide. 
+
+- It analysis the patterns and structure of input data and thus learns.
+
+- GenAI uses "Foundational and Statistical Model".
+
+
+##### Types of Model :-
+
+Generative Language model (LLM) : Learn about patterns through training data.
+- Takes Text as input and generate Text,Image,Audio and Decision.
+
+Generative Image model : This use Diffusion technique to generate new Images.
+- Takes image as input and generate Text,Image,Video.
+
+
+- The power of GenAI comes from the use of 'Transformers'.
+- Transformers consist of Encoder and Decoder.
+- 'Encoder' encode the input sequence and passes it to 'Decoder' and which learns how to decode the representation for a task.
+
+
+- "Prompt" is a short piece of text that is given to LLM as input and it can be used to control the output of models in variety of ways.
+
+
+#### LANGCHAIN
+
+- "LangChain" is a framework for developing GenAI applications powered by large language models (LLMs)/ Open source language model.
+
+- LangSmith(Dashboard) :- A developer platform that lets you debug, test, evaluate, and monitor LLM applications.
+- LangServe :- Deploy LangChain chains as REST APIs.
+- LangGraph.js :-  Build robust and stateful multi-actor applications with LLMs by modeling steps as edges and nodes in a graph.
+
+OpenSource Model
+Paid Source Model
+
+
+#### LARGE LANGUAGE MODEL (LLMS).
+
+- LLM are also a subset of Deep learning.
+
+- An LLM is a type of artificial intelligence (AI) that can generate human-quality text. 
+- LLMs are trained on massive datasets of text and code, and they can be used for many tasks, such as writing, translating, and coding.
+
+- LLM refer to large, general-purpose language model that can be 'pre-trained' and then 'fine-tuned' for specific purpose.
+
+- Pre-trained  :-  We will pre-train a LLM for a general pupose with a large dataset 
+- Fine-tunning  :-  Then fine-tuned it  with specific aims  with a much smaller data set
+
+- Fine-tuning in (GenAI) involves taking a pre-trained model (Gemini/OpenAI) and training it further on a specific dataset to adapt it to a particular task or domain.
+
+
+
+
+
+
+ 
+### RAG PIPELINE.  (RETRIEVEL-AUGMENTED-GENERATION).
+
+- **RAG** is a technique of adding or enhancing LLM knowledge with additional dataset and Generating response on the basis of dataset.
+- Here we will build an **QnA Chatbot using RAG Pipeline, LangChain and LLM's**
+
+
+
+#### TYPICAL RAG PIPELINE APPLICATION
+
+1. **Indexing(pipeline)** - The Pipeline  in which we will Load source data , split it in small chunks , convert chunks in vector and storing it in vectorDB/vectorStore.
+
+2. **Retrieval and generation (Chain)** - The Chain will takes User query , Extract relevant Data from source, Generating prompt on basis of question and Retrive data and Passes it to Model(LLMs).
+
+
+
+
+
+#### RAG PIPELINE ARCHITECTURE.
+
+1. **INDEXING METHOD**
+
+- **Load** - We need to load our data. This is done with **Document Loaders**
+
+- **Split** - **TextSplitters** break large document in small chunks. This is useful for indexing data and passing it in to a model. We will also consider the context window for LLM.
+
+- **Embed** - Now we will convert the small chunks into vector using **Embedding models**
+- **Store** - Lastly we will store the vector in **VectorStore/VectorDB**
+
+
+2. **Retrieval and generation**
+
+- **Retrieve** - Given user input, **Retriever** will extract the relevant data from database.
+
+- **Generate** - **ChatModels/LLM** will take prompt which include question n retrieved data and will provide answer.
+
+
+
+
+#### METHODS AND MODEL USED IN RAG PIPELINE.
+
+
+1. **Document Loaders** are responsible for loading documents from a variety of sources.
+- WebBasedLoader , PDFLoader
+
+2. **Text Splitters** take a document and split into small chunks that can be used for retrieval.
+- Recursively Split Text
+
+3. **Embedding Models** take a small chunks of docs and create a numerical/Vector representation of it.
+- OpenAIEmbedding Model , GooglePalmEmbeddings , etc.
+
+4. **Vector stores** are databases that can efficiently store and retrieve embeddings.
+- Memory / ChromaDB / Faiss / Prisma
+
+5. **Retriever**  this extract and Search the relevant data from database.
+
+
+6. **ChatModels/LLM** This is our language model which will encode prompt and generate the response.
+- OpenSourceModel / PaidSourceModel
+
+
+
