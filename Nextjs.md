@@ -1,5 +1,17 @@
 # REACT AND NEXTJS INTRO 😎
 
+- Installation and setup
+
+```js
+
+- npm create vite@latest my-react-app --template react
+- cd my-react-app
+- npm i
+- npm run dev
+localhost:5173
+
+```
+
 ### REACT JS AND REACT HOOKS
 - REACT JS (MAIN BASE FOR FRONTEND)
 -  use client  
@@ -25,15 +37,19 @@
 
 ## INSTALLATION
 
-```javascript
+- RUN THIS CODE IN ./nextjs DIRECTORY.
+
+```js
+
 npx create-next-app@latest appName
+
 ``` 
 
 ## PACKAGES TO BE INSTALLED
 
 ```js
 
-npm install @clerk/nextjs@latest @prisma/client@latest @tanstack/react-query@latest @tanstack/react-query-devtools@latest axios@latest openai@latest react-hot-toast@latest react-icons@latest
+npm install @clerk/nextjs@latest @prisma/client@latest  @tanstack/react-query@latest @tanstack/react-query-devtools@latest axios@latest react-hot-toast@latest react-icons@latest dayjs@latest next-themes@latest recharts@latest
 
 ```
 
@@ -43,7 +59,9 @@ npm install @clerk/nextjs@latest @prisma/client@latest @tanstack/react-query@lat
 - Install the npm package :-
 
 ```js
+
 npm i -D daisyui@latest @tailwindcss/typography@latest prisma@latest
+
 ```
 
 - Also add the plugin in 'tailwind.config.js' :-
@@ -112,7 +130,58 @@ export default function RootLayout({ children }) {
 } 
 
 ```
-### -------------------------------
+
+
+## PROVIDERS
+
+```js
+
+npm install react-hot-toast
+
+```
+
+##### app/providers.js
+
+```js
+
+'use client';
+import { Toaster } from 'react-hot-toast';
+
+const Providers = ({ children }) => {
+  return (
+    <>
+      <Toaster />
+      {children}
+    </>
+  );
+};
+export default Providers;
+
+```
+
+##### app/layout.js
+
+```js
+
+
+import Providers from './providers';
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang='en'>
+      <body className={inter.className}>
+        <Navbar />
+        <main className='px-8 py-20 max-w-6xl mx-auto'>
+          <Providers>{children}</Providers>
+        </main>
+      </body>
+    </html>
+  );
+}
+
+```
+
+
 
 ## ROUTES
 
@@ -170,7 +239,6 @@ export default Loading;
 ```
 
 
-## ---------------------------------------------------
 
 ## ERROR HANDLING UI (error.jsx) 
 
@@ -195,10 +263,6 @@ export default error;
 
 
 
-## ---------------------------------------------------------------------------------------------------------//
-
-
-
 ## NESTED LAYOUTS 
 
 - THIS IS THE SIMPLE EXAMPLE OF NESTED LAYOUTS
@@ -217,12 +281,7 @@ function DrinksLayoutPage({children}){
 export default DrinksLayoutPage;
 ```
 
-## ---------------------------------------------------------------------------------------------//
 
-
-
-
- 
 
 
 ## SERVER COMPONENTS 
@@ -252,7 +311,6 @@ export default DrinksLayoutPage;
 
 
 
-## -------------------------------------------------------------------------------------------//
 // THIS IS THE SIMPLE AXIOS METHOD TO FETCH THE API.
 
 ```javascript
@@ -281,7 +339,6 @@ async function HandleFetchData(){
 ```
 
 
-## -------------------------------------------------------------------------------------------//
 
 ## DYNAMIC ROUTES 
 
@@ -306,7 +363,6 @@ function DynamicDrinksPage({ params }){
 }
 ```
 
-## -------------------------------------------------------------------------------------------//
 
 
 
@@ -324,25 +380,22 @@ function DynamicDrinksPage({ params }){
 1. Prisma server: A standalone infrastructure component sitting on top of your database.
 2. Prisma client: An auto-generated library that connects to the Prisma server and lets you read, write and stream data in your database. It is used for data access in your applications.
 
-## -------------------------------------------------------------------------------------------//
 
 
-## INSTALLATION 
+
+### INSTALLATION 
 
 ```javascript
-
 npm i prisma --save-dev
 npm i prisma @prisma/client
 npx prisma init
-
 ```
 
--  This creates a new prisma directory with your Prisma schema file and configures SQLite as your database
-
-## -------------------------------------------------------------------------------------------//
+- This creates a new prisma directory with your Prisma schema file and configures SQLite as your database
 
 
-## SETUP PRISMA {GENERATOR AND DATASOURCE} 
+
+### SETUP PRISMA {GENERATOR AND DATASOURCE} 
 
 - Now, inside { schema.prisma } Setup and modify the { generator and datasource }
 
@@ -361,24 +414,18 @@ datasource db {
 
 ```
 
-## -------------------------------------------------------------------------------------------//
 
-
-## .env and .gitignore 
+#### .env and .gitignore 
 
 ```javascript
 DATABASE_URL="file:./dev.db"      { .env }
 ```
 - ADD  { .env } IN { .gitignore }
-
-## -------------------------------------------------------------------------------------------//
-
 - This in turn initializes a new PrismaClient instance each time due to hot reloading that creates a connection to the database.
 - CREATE NEW FOLDER { utils } and THEN ADD { db.ts } FILE INSIDE AN FOLDER.
 
 
-
-## {utils/db.ts} 
+#### {utils/db.ts} 
 
 ```javascript
 
@@ -400,9 +447,9 @@ if (process.env.NODE_ENV != 'production') globalThis.prismaGlobal = prisma
 
 ```
 
-## -------------------------------------------------------------------------------------------//
 
-## PRISMA MODEL 
+
+### PRISMA MODEL 
 
 - Prisma models are defined in the Prisma schema
 - the term "model" refers to an abstraction that maps to a table in your database.
@@ -421,12 +468,11 @@ model Task {
 
 ```
 
-## -------------------------------------------------------------------------------------------//
-
 
 ## RUNNING LOCALLY 
 
 ```javascript
+
 // WHENEVER WE MAKE CHANGES IN OUR SCHEMA RUN THE FOLLOWING CODE :=
 npx prisma migrate dev
 
@@ -436,9 +482,6 @@ npx prisma studio
 
 https://localhost:5555
 ```
-
-
-### --------------------------------------------------------------------------------------------//
 
 
 ### HOST OUR DATABASE ON CLOUD   (Render OR PlanetScale)
@@ -457,8 +500,6 @@ CHANGE PROVIDERS TO "postgresql"
 // When done with URL. Run the following code 
 npx prisma db push
 ```
-
-
 
 ## CONNECT OUR DATABASE WITH FRONTEND AND BACKEND 
 
@@ -500,15 +541,10 @@ async function prismaPage(){
 }
 ```
 
-## -------------------------------------------------------------------------------------------//
+### CRUD OPERATION 
 
+**REFER {prisma.io} FOR MORE INFORMATION OF CRUD OPERATION AND PRISMA.**
 
-
-## CRUD OPERATION 
-
-### REFER {prisma.io} FOR MORE INFORMATION OF CRUD OPERATION AND PRISMA.
-
-## -------------------------------------------------------------------------------------------//
 
 ### CREATE OPERATION
 
@@ -551,7 +587,6 @@ async function createTask(){
 - 'formData' can be used only inside the 'use server' directive
 - 'form' tag should take an attribute of 'action' and passed the function 'handleAction'
 
-## -------------------------------------------------------------------------------------------//
 
 
 ### READ OPERATION
@@ -593,12 +628,9 @@ async function readTask(){
 - By 'findMany' we can get all the tasks as return.
 - We also have 'findUnique' method and just passed the 'where' condition.
 
-## -------------------------------------------------------------------------------------------//
 
 
 ### UPDATE OPERATION
-
-
 
 ```javascript
 
@@ -661,10 +693,6 @@ async function editForm({id}){
 
 
 
-
-## -------------------------------------------------------------------------------------------//
-
-
 ### DELETE OPERATION
 
 
@@ -713,13 +741,10 @@ async function DeleteForm(props){
 - AGAIN, WE HAVE USED THE SAME METHOD OF 'INPUT TAG', WHICH WILL RETURN US THE ' TASKID ' WHICH HAS TO BE DELETED.
 
 
-## -------------------------------------------------------------------------------------------//
-
 ## Server Actions
 
 - Server Actions are asynchronous functions that are executed on the server. 
 - They can be used in Server and Client Components to handle form submissions and data mutations in Next.js applications.
-
 
 
 ### FORMS   (formData)
@@ -781,10 +806,7 @@ export function SubmitButton() {
 
 ```
 
-== SubmitButton can then be nested in any form:
-
-
-## ----------------------------------------------------
+- SubmitButton can then be nested in any form:
 
 
 ### FORM STATE MANAGEMENT   (useFormState)
@@ -854,56 +876,6 @@ export function TaskForm() {
 ```
 
 
-### ------------------------------------------------------------
-
-## PROVIDERS
-
-```js
-npm install react-hot-toast
-```
-
-##### app/providers.js
-
-```js
-
-'use client';
-import { Toaster } from 'react-hot-toast';
-
-const Providers = ({ children }) => {
-  return (
-    <>
-      <Toaster />
-      {children}
-    </>
-  );
-};
-export default Providers;
-
-```
-
-##### app/layout.js
-
-```js
-
-
-import Providers from './providers';
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang='en'>
-      <body className={inter.className}>
-        <Navbar />
-        <main className='px-8 py-20 max-w-6xl mx-auto'>
-          <Providers>{children}</Providers>
-        </main>
-      </body>
-    </html>
-  );
-}
-
-```
-### --------------------------------------------------
-
 ### LOCAL BUILD
 
 ##### package.json
@@ -949,10 +921,6 @@ export const dynamic = 'force-dynamic';
 - COMMIT THE CHANGES, TO APPLY CHANGES IN OUR LIVE APP.
 
 
-
-
-## --------------------------------------------------
-
 ## CLERK AUTHENTICATION
 
 - create account
@@ -982,15 +950,22 @@ CLERK_SECRET_KEY = your_secret_key;
 ```js
 // CREATE THIS FILE IN ROOT DIRECTORY
 
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
- 
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+
 // public routes in our case '/'
 const isPublicRoute = createRouteMatcher(['/']);
- 
+const isProtectedRoute = createRouteMatcher([
+  '/chat(.*)',
+  '/addjob(.*)',
+  '/jobs(.*)',
+  '/stats(.*)',
+]);
+
+
 export default clerkMiddleware(async (auth, req) => {
-  if (!isPublicRoute(req)) auth().protect();
+  if (!isProtectedRoute(req)) auth().protect();
 });
- 
+
 export const config = {
   matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
 };
@@ -1071,6 +1046,9 @@ export default UserProfilePage;
 
 
 ### THEME TOGGLE USING DAISY UI
+
+- Whenever we will use Shadcn ui it will change the tailwind.config.js and global.css file
+- Add daisy ui in tailwind.config file and global.css file.
 
 ```js
 //  tailwind.config.js
@@ -1242,6 +1220,7 @@ import { useQuery } from '@tanstack/react-query';
 async function Todos() {
 
   const { isPending, data, isError } = useQuery({
+    // HERE 'todos' IS NOTHING BUT AN GLOBAL KEY WHICH WE CAN USE IN OTHER QUERY.
     queryKey: ['todos', item],
     queryFn: () => fetchListItem(item), 
   });
@@ -1428,6 +1407,7 @@ function ItemPage(){
 
 
 
+
 ## INTRODUCTION TO GENAI.
 
 
@@ -1492,7 +1472,7 @@ Paid Source Model
 
 #### LARGE LANGUAGE MODEL (LLMS).
 
-- LLM are also a subset of Deep learning.
+- LLM are the subset of Deep learning.
 
 - An LLM is a type of artificial intelligence (AI) that can generate human-quality text. 
 - LLMs are trained on massive datasets of text and code, and they can be used for many tasks, such as writing, translating, and coding.
@@ -1541,33 +1521,119 @@ Paid Source Model
 
 2. **Retrieval and generation**
 
-- **Retrieve** - Given user input, **Retriever** will extract the relevant data from database.
+- **Retrievel** - Given user input, **Retriever** will extract the relevant data from database.
 
 - **Generate** - **ChatModels/LLM** will take prompt which include question n retrieved data and will provide answer.
 
 
 
 
-#### METHODS AND MODEL USED IN RAG PIPELINE.
+
+#### METHODS AND MODEL USED IN RAG PIPELINE WITH CODE.
+
+
+0. **DECLARING MODEL**
+```js
+import { ChatGroq } from "@langchain/groq";
+import "cheerio";
+const llm = new ChatGroq({
+            model: "mixtral-8x7b-32768",
+            temperature: 0
+});
+```
+
 
 
 1. **Document Loaders** are responsible for loading documents from a variety of sources.
 - WebBasedLoader , PDFLoader
+- Here, I can also use PDF folder present in our Root directory to enhance the model.
 
-2. **Text Splitters** take a document and split into small chunks that can be used for retrieval.
+```js
+import { CheerioWebBaseLoader } from "@langchain/community/document_loaders/web/cheerio";
+const loader = new CheerioWebBaseLoader(
+  "https://lilianweng.github.io/posts/2023-06-23-agent/",
+);
+const docs = await loader.load();
+console.log(docs[0].pageContent);
+```
+
+
+
+2. **Text Splitters** encode large document and split into small chunks that can be used for retrieval. Small chunks will be suitable for context window of chatmodel.
 - Recursively Split Text
 
-3. **Embedding Models** take a small chunks of docs and create a numerical/Vector representation of it.
-- OpenAIEmbedding Model , GooglePalmEmbeddings , etc.
+
+```js
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+const textSplitter = new RecursiveCharacterTextSplitter({
+  chunkSize: 1000,
+  chunkOverlap: 200,
+});
+const allSplits = await textSplitter.splitDocuments(docs);
+console.log(allSplits.length);
+```
+
+
+3. **Embedding Models** takes small chunks of docs and convert them in a Vector representation of it.
+- OpenAIEmbedding Model , GooglePalmEmbeddings , OllamaEmbeddings , etc.
 
 4. **Vector stores** are databases that can efficiently store and retrieve embeddings.
 - Memory / ChromaDB / Faiss / Prisma
 
-5. **Retriever**  this extract and Search the relevant data from database.
+
+```js
+import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import { OllamaEmbeddings } from "@langchain/openai";
+const vectorStore = await MemoryVectorStore.fromDocuments(
+  allSplits,
+  new OllamaEmbeddings(),
+);
+```
 
 
-6. **ChatModels/LLM** This is our language model which will encode prompt and generate the response.
+5. **Retriever**  will encode the userQuery, Extract relevant data from DataStore. Then convert the userquery and extracted data into prompt.
+
+```js
+const retriever = vectorStore.asRetriever({ k: 6, searchType: "similarity" });
+```
+
+
+
+6. **ChatModels/LLM** This is our language model which will encode prompt and generate the response on the basis of data.
 - OpenSourceModel / PaidSourceModel
 
+```js
+import { PromptTemplate } from "@langchain/core/prompts";
+import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
+import { StringOutputParser } from "@langchain/core/output_parsers";
+
+const template = `Use the following pieces of context to answer the question at the end.
+If you don't know the answer, just say that you don't know, don't try to make up an answer.
+Use three sentences maximum and keep the answer as concise as possible.
+Always say "thanks for asking!" at the end of the answer.
+
+{context}
+
+Question: {question}
+
+Helpful Answer:`;
+
+const customRagPrompt = PromptTemplate.fromTemplate(template);
+const ragChain = await createStuffDocumentsChain({
+  llm,
+  prompt: customRagPrompt,
+  outputParser: new StringOutputParser(),
+});
+const context = await retriever.invoke("what is task decomposition");
+let result = await ragChain.invoke({
+  question: "What is Task Decomposition?",
+  context,
+});
+console.log(result);
+```
 
 
+
+### CHAT APPLICATION USING LANGCHAIN (LOGIC AND FRONTEND PART).
+
+- Here we can use RAG Pipeline architecture
