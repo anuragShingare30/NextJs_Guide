@@ -1636,4 +1636,403 @@ console.log(result);
 
 ### CHAT APPLICATION USING LANGCHAIN (LOGIC AND FRONTEND PART).
 
-- Here we can use RAG Pipeline architecture
+#### Frontend logic to handle the response from LLM.
+- Here first we will understand the frontend part to handle the response from our LLM and logic behind it.
+- We can use 'useMutation' or 'useQuery' hook to handle the server-comp inside an client-comp.
+
+
+```js
+
+'use client'
+import React, { ChangeEvent, FormEvent, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { getchatResponse } from "../utils/action";
+
+
+const Chat = () => {
+    // state management to handle the response from llm
+    const [text, setText] = useState("");
+    const [messages, setMessages] = useState([]);
+
+    // Here, we have used useMutation hook to handle SSC inside an CSC.
+    const { mutate: mutateFunc, isPending, data } = useMutation({
+        // mutate func will update our getchatResponse Function.
+        mutationFn: async (text: string) => await getchatResponse(text),
+        onSuccess: (data) => {
+            // Our toast component for success and error message notification
+            if (!data) {
+                toast.error("An error occured");
+            }
+            else {
+                toast.success("Success");
+            }
+            // Assuming result is the key holding the chat response
+            let result = data.content.parts[0].text;
+            // Storing response from our LLM in our state
+            setMessages((prevMessages) => [...prevMessages, { role: 'bot', parts: [{ text: result }] }]);
+        }
+    });
+
+    function handleSubmit(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        // Here storing our User question
+        setMessages((prevMessages) => [...prevMessages, { role: 'user', parts: [{ text: text }] }]);
+        // updating our getchatResponse() function.
+        mutateFunc(text);
+        setText("");
+        console.log(messages);
+    };
+
+    // 
+    const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
+        // Storing our question in state.
+        setText(e.target.value);
+    };
+
+    return (
+        <div className="min-h-[calc(100vh-6rem)] grid grid-rows-[1fr,auto]">
+            <div>
+                <h1 className="text-3xl relative bottom-5">An Virtual AI Assistant</h1>
+                // Here this is an array state of response and questions from our LLM, which we will display as a single box.
+                {
+                    messages.map((message, index) => {
+                        // Avatar on the basis of response from LLM or user.
+                        let avatar = message.role === 'user' ? '👨🏽' : '🤖';
+                        let bcg = message.role === 'user' ? "bg-base-200 shadow-lg" : "bg-base-100 shadow-lg";
+
+                        // Function to process the message text
+                        const renderText = (text: string) => {
+                            const parts = text.split('**');
+                            return parts.map((part, idx) => {
+                                // Here we have format the response on the basis of ** and *.
+                                // Alternate between <h1> and <p> based on the split index
+                                if (idx % 2 === 1) {
+                                    return <h1 key={idx} className="font-extrabold">{part}</h1>;
+                                } else {
+                                    return <p key={idx} className="font-light font-mono">{part}</p>;
+                                }
+                            });
+                        };
+
+                        return (
+                            <div key={index} className={`flex flex-row mt-6 leading-loose border-b border-base-300 ${bcg}`}>
+                                <p className="m-3">{avatar}</p>
+                                <div className="m-3">
+                                    {renderText(message.parts[0].text)}
+                                </div>
+                            </div>
+                        );
+                    })
+                }
+
+                // Loading div component on submit to handle the response.
+                <div className="m-10">
+                    {isPending ? <span className="loading"></span> : null}
+                </div>
+            </div>
+            // Form for submission of question and response.
+            <form className="join relative mb-24" onSubmit={handleSubmit}>
+                <div className="join w-full absolute bottom-auto mt-5">
+                    <input
+                        type="text"
+                        placeholder="Message VoyageVision"
+                        className="input input-bordered join-item w-full"
+                        name="text"
+                        value={text}
+                        onChange={handleInput}
+                    />
+                    <button
+                        type="submit"
+                        className="btn btn-primary w-32 join-item rounded-2xl mb-5 font-bold"
+                        disabled={isPending}
+
+                    >
+                        {isPending ? "Please Wait..." : "Ask"}
+                    </button>
+                </div>
+            </form>
+        </div>
+    )
+}
+
+export { Chat };
+
+```
+
+
+#### Server side rendering to fetch the response from LLM.
+
+- Here we can either use Langchain and LLMs or Google Gemini as a our pre-trained model.
+
+
+```js
+
+"use server"
+import React from "react";
+// For google gemini llm
+import { GoogleGenerativeAI } from "@google/generative-ai";
+// for langchain and opensource llms
+import { ChatGroq } from "@langchain/groq";
+import { InMemoryChatMessageHistory } from "@langchain/core/chat_history";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { RunnableWithMessageHistory } from "@langchain/core/runnables";
+import { HumanMessage } from "@langchain/core/messages";
+import { AIMessage } from "@langchain/core/messages";
+// for fine-tunning an pre-trained model on the large datasets.
+import { ChatGroq } from "@langchain/groq";
+import "cheerio";
+import { CheerioWebBaseLoader } from "@langchain/community/document_loaders/web/cheerio";
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import { GooglePaLMEmbeddings } from "@langchain/community/embeddings/googlepalm";
+import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import { PromptTemplate } from "@langchain/core/prompts";
+import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
+import { StringOutputParser } from "@langchain/core/output_parsers";
+
+
+
+
+// THIS IS AN OPEN SOURCE MODEL (GOOGLE GEMINI) API WHICH IS USED FOR SIMPLE VIRTUAL CHAT ASSISTANT.
+export async function googleGeminiChat(prompt: string) {
+  // Access your API key as an environment variable
+  const genAI = new GoogleGenerativeAI(process.env.API_KEY); 
+  try {
+    // Choose a model that's appropriate for your use case.
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); 
+
+    const result = await model.generateContent({
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            {
+              text: prompt,
+            }
+          ],
+        }
+      ],
+      generationConfig: {
+        maxOutputTokens: 1000,
+        temperature: 0.1,
+      },
+    });
+    // console.log(result.response.text());
+    console.log(result.response.candidates[0].content.parts[0].text);
+    return (result.response.candidates[0]);
+  }
+  catch (error) {
+    console.log(error);
+  }
+};
+
+
+// THIS USES AN PRE-TRAINED MODEL AND STORE THE MESSAGE HISTORY OF THE USER AND REGARDING OUR APP.
+export async function langchainChat(text: string) {
+  try {
+    // LANGUAGE MODEL TO BE USED.
+    const model = new ChatGroq({
+      model: "mixtral-8x7b-32768",
+      temperature: 0
+    });
+    // THIS IS AN JS OBJECT WHICH WILL STORE OUR MESSAGE HISTORY.
+    const messageHistories: Record<string, InMemoryChatMessageHistory> = {};
+
+    // THIS IS OUR TEMPLATE TO GENERATE THE RESPONSE.
+    const prompt = ChatPromptTemplate.fromMessages([
+      [
+        "system",
+        `You are a helpful assistant who remembers all details the user shares with you.`,
+      ],
+      ["placeholder", "{chat_history}"],
+      ["human", "{input}"],
+    ]);
+
+    // THIS IS USED TO CONNECT OUR LLM MODEL WITH OUTPUT PARSER
+    const chain = prompt.pipe(model);
+
+    // HERE WE CAN PROVIDE SPECIFIC DETAILS RELATED TO US OR FOR THIS APP.
+    const messages = [
+      new HumanMessage({ content: "hi! I'm anurag" }),
+      new AIMessage({ content: "hi!" }),
+    ];
+
+    // THIS FUNCTION WILL ENCODE THE RESPONSE FROM AI AS WELL THE INPUT FROM USER. THIS FUNC REQUIRED THE SESSION ID.
+    const withMessageHistory = new RunnableWithMessageHistory({
+      runnable: chain,
+      getMessageHistory: async (sessionId) => {
+        if (messageHistories[sessionId] === undefined) {
+          const messageHistory = new InMemoryChatMessageHistory();
+          await messageHistory.addMessages(messages);
+          messageHistories[sessionId] = messageHistory;
+        }
+        return messageHistories[sessionId];
+      },
+      inputMessagesKey: "input",
+      historyMessagesKey: "chat_history",
+    });
+
+
+    // IF WE HAVE AN APP WHICH OPERATES MULTIPLE USER IN SAME APP. WE CAN SAVE THEIR HISTORY WITH THE UNIQUE SESSION ID.
+    const config = {
+      configurable: {
+        sessionId: "abc2",
+      },
+    };
+
+
+    // HERE, WE WILL GET THE RESPONSE FROM AI.
+    const response = await withMessageHistory.invoke(
+      {
+        input: text,
+      },
+      config
+    );
+    console.log(response.content);
+    return (response.content);
+  }
+  catch (error) {
+    console.log(error);
+  };
+
+
+};
+
+
+// THIS IS USED TO FINE-TUNED AN MODEL ON THE LARGE DATASET.
+export async function PdfParser(){
+
+    try {
+        // LANGUAGE MODEL TO BE USED.
+        const llm = new ChatGroq({
+            model: "mixtral-8x7b-32768",
+            temperature: 0
+        });
+
+
+        // TO LOAD THE DATA FROM DATA SOURCE WE WILL USE 'DOCUMENTLOADERS' 
+        const loader = new CheerioWebBaseLoader(
+            "https://lilianweng.github.io/posts/2023-06-23-agent/",
+
+        );
+        const docs = await loader.load();
+        // console.log(docs);
+        
+
+
+
+        // NOW, THE LOADED DOCUMENT FROM DATASOURCE WILL BE SPLITTED INTO SMALL CHUNKS, SO THAT IT WILL APPLICABLE TO CONTEXT WINDOW OF LLM.
+        // WE WILL USE 'RecursiveCharacterTextSplitter'
+        const textSplitter = new RecursiveCharacterTextSplitter({
+            chunkSize: 1000,
+            chunkOverlap: 200,
+        });
+        const allSplits = await textSplitter.splitDocuments(docs);
+
+
+
+        // NOW WE WILL CONVERT SMALL CHUNKS INTO VECTOR NUM USING 'EMBEDDINGS MODEL' AND STORE VECTOR IN 'VECTOR DB/VECTOR STORE'.
+        const vectorStore = await MemoryVectorStore.fromDocuments(
+            allSplits,
+            new GooglePaLMEmbeddings(),
+        );
+
+
+        // NOW USING 'RETRIEVER' WE WILL EXTRACT THE MOST RELEVANT DATA FROM DATASOURCE.
+        const retriever = vectorStore.asRetriever({ k: 6, searchType: "similarity" });
+
+
+        //  A chain that takes a question, retrieves relevant documents, constructs a prompt, passes that to a ChatModel/LLMs, and parses the output. 
+        const template = `Use the following pieces of context to answer the question at the end.
+    If you don't know the answer, just say that you don't know, don't try to make up an answer.
+    Use three sentences maximum and keep the answer as concise as possible.
+    Always say "thanks for asking!" at the end of the answer.
+
+    {context}
+
+    Question: {question}
+
+    Helpful Answer:`;
+
+        const customRagPrompt = PromptTemplate.fromTemplate(template);
+        const ragChain = await createStuffDocumentsChain({
+            llm,
+            prompt: customRagPrompt,
+            outputParser: new StringOutputParser(),
+        });
+        const context = await retriever.invoke("What are types of memory?");
+        let result = await ragChain.invoke({
+            question: "What are types of memory?",
+            context,
+        });
+        // console.log(result);
+
+
+
+    } catch (error) {
+        console.log(error);
+
+    }
+```
+
+
+
+
+### SIMPLE FORM STATE MANAGEMENT USING REACT HOOK FORM.
+
+- Here we will use the react-hook-form to handle the form input for multiple input.
+- Commonly we use useState Hook or formData method, but react support an library which will return the input values in an object.
+
+
+- Install the library
+```js
+npm install react-hook-form
+
+```
+
+- Usage of react-hook-form
+
+```js
+
+import {useForm} from "react-hook-form";
+
+export function inputData(){
+
+
+  let {
+    register,
+    watch,
+    handleSubmit
+  } = useForm();
+
+  function onSubmit(data){
+    console.log(data);
+    return data;
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+          // Handle username
+          <input type='text' placeholder='Enter username' {...register{'username'}}/>
+          // Handle email
+          <input type='text' placeholder='Enter email' {...register{'email'}}/>
+          // Handle address
+          <input type='text' placeholder='Enter address' {...register{'address'}}/>
+          // This is button to submit the form.
+          <button type='submit' className='btn btn-lg text-base-300 bg-base-900'>Add Data</button>
+      </form>
+    </div>
+  );
+
+};
+
+
+
+// Example output in console.
+{username:'rohit', email:'xyz@gmail.com', address:'mumbai'}
+```
+
+
+
+### FORM MANAGEMENT USING ZOD AND REACT HOOK FORM IN TYPESCRIPT.
