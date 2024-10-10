@@ -14,12 +14,16 @@ localhost:5173
 
 ### REACT JS AND REACT HOOKS
 - REACT JS (MAIN BASE FOR FRONTEND)
--  use client  
--  use server 
+- use client  
+- use server 
 
--  useFormStatus 
--  useFormState 
--  useEffect
+- useFormStatus 
+- useFormState 
+- useEffect
+
+- useMutationHook
+- useQuery Hook
+
 
 ### STYLING AND CSS ✨
 
@@ -27,7 +31,7 @@ localhost:5173
 - Daisy UI
 - Material UI
 - Provider {react-hot-toast}
-
+- Acertinity UI
 
 
 # NEXTJS 🔥
@@ -96,6 +100,8 @@ module.exports = {
 - By default { NextJs } will automatically insert the { layout.js } file in our { app directory }.
 - When a {layout.js} and {page.js} file are defined in the same folder, the layout will wrap the page.
 
+
+
 ### CODE SYNTAX FOR {layout.js}. THIS WILL REMAIN ALMOST SAME.
 
 ```javascript
@@ -140,7 +146,7 @@ npm install react-hot-toast
 
 ```
 
-##### app/providers.js
+#### app/providers.js
 
 ```js
 
@@ -266,7 +272,7 @@ export default error;
 ## NESTED LAYOUTS 
 
 - THIS IS THE SIMPLE EXAMPLE OF NESTED LAYOUTS
-- { /Drinks/layout.jsx  ||  /Drinks/loading.jsx  ||  /Drinks/error.jsx }   THIS IS THE EXAMPLE OF NESTED LAYOUTS
+- { /Drinks/layout.jsx  ||  /Drinks/loading.jsx  ||  /Drinks/error.jsx || /Drinks/page.jsx }   THIS IS THE EXAMPLE OF NESTED LAYOUTS
 - NESTED Layouts preserve state, remain interactive, and do not re-render. Layouts can also be nested.
 
 
@@ -295,7 +301,7 @@ export default DrinksLayoutPage;
 ## CLIENT COMPONENTS 
 
 - Client Components allow you to write interactive UI that is prerendered on the server and can use client JavaScript to run in the browser.
-- Interactivity: Client Components can use use state, effects, and event listeners, meaning they can provide immediate feedback to the user and update the UI.
+- Interactivity: Client Components are nothing but use state, effects, and event listeners, meaning they can provide immediate feedback to the user and update the UI.
 - Browser APIs: Client Components have access to browser APIs
 - To use Client Components, you can add the React "use client" directive at the top of a file, above your imports.
 - "use client" is used to declare a boundary between a Server and Client Component modules.
@@ -340,7 +346,7 @@ async function HandleFetchData(){
 
 
 
-## DYNAMIC ROUTES 
+## DYNAMIC ROUTES  
 
 - A Dynamic Segment can be created by wrapping a folder's name in square brackets: [folderName]. For example, [id]
 - Dynamic Segments are passed as the {params} prop to layout, page, route  functions.
@@ -362,12 +368,6 @@ function DynamicDrinksPage({ params }){
   );
 }
 ```
-
-
-
-
-
-
 
 
 
@@ -415,10 +415,12 @@ datasource db {
 ```
 
 
-#### .env and .gitignore 
+#### .env in .gitignore 
 
 ```javascript
-DATABASE_URL="file:./dev.db"      { .env }
+// .env
+DATABASE_URL="file:./dev.db"      
+
 ```
 - ADD  { .env } IN { .gitignore }
 - This in turn initializes a new PrismaClient instance each time due to hot reloading that creates a connection to the database.
@@ -535,6 +537,7 @@ async function prismaPage(){
 
   let result = await prismaHandlers();
   return (
+    console.log(result);
     <h1>{result.content}</h1>
   );
 
@@ -749,7 +752,7 @@ async function DeleteForm(props){
 
 ### FORMS   (formData)
 
--  'form' element to allow Server Actions to be invoked with the {action} attribute.
+- 'form' element to allow Server Actions to be invoked with the {action} attribute.
 - the action automatically receives the FormData object.
 - You don't need to use React useState to manage fields, instead, you can extract the data using the native FormData methods.
 
@@ -948,7 +951,7 @@ CLERK_SECRET_KEY = your_secret_key;
 
 
 ```js
-// CREATE THIS FILE IN ROOT DIRECTORY
+// app/
 
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
@@ -1172,7 +1175,10 @@ export default Providers;
 
 ### USING useQuery and useMutation HOOKS
 
-- Now to use this hooks in our Route segment folder, We need to wrap the page.jsx file with queryClient.
+- Now to use the 'useQuery' hook, we need to wrap the 'page.jsx' file. Similar to the one shown below.
+- The function which we are going to use inside an component function, we need to define the same in 'page.jsx'.
+
+- We can define as many as 'preFetchQuery' we will use.
 
 ```js
 // app/Chat/page.jsx
@@ -1191,6 +1197,12 @@ async function ChatPage(){
 
     // THIS WILL CREATE NEW QUERY CLIENT.
     const queryClient = new QueryClient();
+    
+    await queryClient.prefetchQuery({
+      // Provide some default values.
+      queryKey: ['todos', ''],
+      queryFn: () => fetchListItem({}), 
+    })
     
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
@@ -1319,18 +1331,20 @@ function TodosPage(){
 
 
 
-### SEARCH FUNCTIONALITY USING REACT QUERY
+### SEARCH FUNCTIONALITY(READING) USING REACT QUERY
 
 - Here we can use 'useQuery' Hooks to add search functionality in our web application.
 - We can set an input form for which we are searching an term.
 
-
+- We will use 'Combining operators' to search for an item.
+- [OR, NOT]
 
 ```js
 // utils/action.jsx
 
 async function getAllListItem(searchTerm) {
     if (!searchTerm) {
+      // LISTING ALL ITEMS
         let items = await prisma.tour.findMany({
             orderBy: {
                 item: 'asc',
@@ -1338,15 +1352,18 @@ async function getAllListItem(searchTerm) {
         });
         return items;
     }
-
+  
     let items = await prisma.tour.findMany({
         where: {
             OR: [
                 {
-                    item: {
+                  modelItem1: {
                         contains: searchTerm
-                    },
-                },
+                  },
+                  modelItem2: {
+                        contains: searchTerm
+                  },
+                }, 
             ]
         },
         orderBy: {
@@ -1356,7 +1373,7 @@ async function getAllListItem(searchTerm) {
     return items;
 }
 
-This utility func will return all list item
+This utility func will return all list item.
 
 // THIS IS COMPONENT FOR OUR SEARCH FUNCTIONALITY. 
 
@@ -1634,7 +1651,7 @@ console.log(result);
 
 
 
-### CHAT APPLICATION USING LANGCHAIN (LOGIC AND FRONTEND PART).
+## CHAT APPLICATION USING LANGCHAIN (LOGIC AND FRONTEND PART).
 
 #### Frontend logic to handle the response from LLM.
 - Here first we will understand the frontend part to handle the response from our LLM and logic behind it.
@@ -1976,9 +1993,10 @@ export async function PdfParser(){
 ```
 
 
+## FORM MANAGEMENT
 
 
-### SIMPLE FORM STATE MANAGEMENT USING REACT HOOK FORM.
+### SIMPLE FORM STATE MANAGEMENT USING REACT-HOOK-FORM.
 
 - Here we will use the react-hook-form to handle the form input for multiple input.
 - Commonly we use useState Hook or formData method, but react support an library which will return the input values in an object.
@@ -2028,11 +2046,443 @@ export function inputData(){
 };
 
 
-
 // Example output in console.
 {username:'rohit', email:'xyz@gmail.com', address:'mumbai'}
 ```
 
 
 
-### FORM MANAGEMENT USING ZOD AND REACT HOOK FORM IN TYPESCRIPT.
+### FORM MANAGEMENT USING ZOD AND REACT-HOOK-FORM IN TYPESCRIPT.
+
+- Add the form component from shadcn ui.
+
+```js
+npx shadcn-ui@latest add form
+```
+- Now we will look for an single input value and how to handle it using 'zod and react-hook-form'
+
+
+
+1. Create a Form schema as an object using zod (basically declaring our input's name).
+
+```js
+import * as z from "zod";
+
+// Defining an formSchema
+export const formSchema = z.object({
+  username: z.string().min(2, {message:"It should be maximum of two characters"}),
+});
+```
+
+
+2. We will use 'useForm' Hook to declare the 'form' and default value for our input.
+
+```js
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+// Define an form.
+const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+    },
+  });
+```
+
+
+3. We will define an 'onSubmit' Function similar to 'useForm' Hook.
+
+```js
+// Define a submit handler.
+function onSubmit(values:z.infer<typeof formSchema>){
+  console.log(values);
+}
+```
+4. Finally, following 'Form' component of shadcn ui and 'form' tag to define our form.
+
+
+```js
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+return (
+  <Form {...form}>
+    <form 
+      className="bg-base-100 text-white"
+      onSubmit={form.handleSubmit(onSubmit)}
+    >
+    <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="capitalize">Username</FormLabel>
+              <FormControl>
+                <Input  {...field} className="input bg-base-100 text-neutral-900"/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+    </form>
+  </Form>
+);
+```
+
+
+5. The full code for input management using zod and react-hook-form.
+
+
+```js
+
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+
+// Defining an formSchema
+export const formSchema = z.object({
+  username: z.string().min(2, {message:"It should be maximum of two characters"}),
+});
+
+
+export function handleInput(){
+
+// Define an form.
+const form = useForm<z.infer<typeof formSchema>>({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        username: "",
+    },
+  });
+
+// Define a submit handler.
+function onSubmit(values:z.infer<typeof formSchema>){
+  console.log(values);
+};
+
+
+return (
+  <Form {...form}>
+    <form 
+      className="bg-base-100 text-white"
+      onSubmit={form.handleSubmit(onSubmit)}
+    >
+    <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="capitalize">Username</FormLabel>
+              <FormControl>
+                <Input  {...field} className="input bg-base-100 text-neutral-900"/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <button type='submit' className='btn btn-lg text-neutral-900' >Add</button>
+    </form>
+  </Form>
+};
+
+```
+
+
+
+### If we have more than one input value to be declare.
+
+- The procedure will be same from declaring an schema to default value.
+- We need to declare a 'formField' components and used it in our main function.
+
+
+
+```js
+// components/FormComponent.tsx
+
+import {
+    FormField,
+    FormItem,
+    FormMessage,
+    FormLabel,
+    FormControl
+} from '../@/components/ui/form'
+import { Input } from '../@/components/ui/input';
+
+
+export function customFormField({name,control}){
+
+  return (
+      <FormField
+          control={control}
+          name={name}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="capitalize">Username</FormLabel>
+              <FormControl>
+                <Input  {...field} className="input bg-base-100 text-neutral-900"/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+  );
+};
+
+```
+
+- Import the 'customFormField' component in our main function.
+
+```js
+
+import {customFormField} from "./components/customFormField.tsx";
+import * as z from "zod";
+
+const formSchema = z.object({
+  username: z.string().min(2),
+  email: z.string().min(2),
+  location: z.string().min(2),
+})
+
+function handleInput(){
+  // Define an form.
+  const form = useForm<z.infer<typeof formSchema>>({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        username: "",
+        email: "",
+        location:"",
+    },
+  });
+
+  function onSubmit(values:z.infer<typeof formSchema>){
+    console.log(values);
+  };
+
+  return (
+      <div>
+        <Form {...form}>
+          <form 
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="bg-red-900"
+          >
+          <div>
+            // For username
+            <customFormField  name='username' control={form.control}/>
+            // For email
+            <customFormField  name='email' control={form.control}/>
+            // For location
+            <customFormField  name='location' control={form.control}/>
+          </div>
+          <button type="submit">Add</button>
+          </form>
+        </Form>
+      </div>
+  );
+};
+```
+
+
+- We can now use multiple input for our form submission using zod and react-hook-form.
+
+
+
+## USER-ID USING CLERK.
+
+- We can use clerk to get the user-id so we can make an multi-user platform.
+
+```js
+import {auth} from "@clerk/nextjs/server";
+
+function getClerkId(){
+  let {userId} = auth();
+  if(!userId){
+    throw new Error("User is not authenticated");
+  }
+  return userId;
+};
+
+// This will give u the ID.
+let userId = getClerkId();
+
+```
+
+
+
+
+####  useSearchParams
+
+- 'useSearchParams' is a Client Component hook that lets you read the current URL's query string.
+
+
+```js
+
+import { useSearchParams } from 'next/navigation';
+
+export function searchForm(){
+
+  // URL :-  https://localhost:3000/Job?search=my-project+jobstatus=declined
+  let searchParams = useSearchParams();
+  let search = searchParams.get('search');
+  let jobstatus = searchParams.get('jobstatus') || 'all';
+  console.log(search,jobstatus);
+
+
+  function handleSubmit(e){
+    let formData = new FormData(e.currentTarget);
+    let search = formData.get('search');
+    let jobstatus = formData.get('jobstatus');
+    console.log(search, jobstatus);
+  };
+
+  return (
+      <form onSubmit={handleSubmit}>
+          <div>
+            <input name='search' type='text'/>
+            <input name='jobstatus' type='text'/>
+            <button type='submit' className='btn btn-primary'>Search Job</button>
+          </div>
+      </form>
+  );
+};
+
+```
+
+
+- We can access the value of query from URL.
+
+```js
+
+import { useSearchParams } from 'next/navigation';
+
+export function getJobList(){
+  
+  let searchParams = useSearchParams();
+  let search = searchParams.get('search');
+  let jobstatus = searchParams.get('jobstatus') || 'all';
+  
+  console.log(search, jobstatus);
+}
+```
+
+
+### COUNT NUMBER OF ROWS IN OUR MODEL FOR STATS.
+
+- When we are analysing or representing stats and charts, we to count all the rows to analyze the numbers.
+- Here we will use the 'count' method in prisma to count the number of rows on the basis of given condition.
+
+```js
+
+async function getStatsAction(){
+  let userId = getClerkId();
+  try {
+    let stats = await prisma.jobs.groupBy({
+      where:{
+        clerkId:userId,
+      },
+      // 'by' method will decide for which row we are calculating the count and descriminate as we want.
+      by:['status'],
+      _count:{
+        status:true
+      }
+    });
+
+    // HERE WE HAVE CREATED AN OBJECT FOR JOBS COUNT AND JOB STATUS.
+    let jobs = {};
+    let data = stats.map((job)=>{
+      jobs = {
+        count:job._count.status,
+        status:job.status,
+      };
+      return jobs;
+    })
+    console.log(data);
+    return data;
+  } 
+  catch (error) {
+    console.log(error);
+    return null;
+      
+  }
+};
+
+
+// THIS WILL BE THE OUTPUT FOR THE ABOVE FUNCTION WHERE WE ARE CALCULATING THE TOTAL INPUT ENTRIES.
+// [
+//   { _count: { status: 33 }, status: 'declined' },
+//   { _count: { status: 41 }, status: 'interview' },
+//   { _count: { status: 29 }, status: 'pending' }
+// ]
+
+
+```
+
+
+### GET THE COLUMNS AND ITS COUNT ON THE BASIS OF CONDITION.
+
+- To create an charts we need counts for some specific columns.
+
+```js
+
+async function getChartsAction(){
+  let userId = getClerkId();
+  let date = dayjs().subtract(6,'month').toDate();
+  try {
+    let charts = await prisma.jobs.findMany({
+      where:{
+        clerkId:userId,
+        createdAt:{
+          gte:date,
+        },
+      },
+      orderBy:{
+        createdAt:'asc',
+      }
+    });
+    
+    let applicationsPerMonth = charts.reduce((acc, job) => {
+      const date = dayjs(job.createdAt).format('MMM YY');
+
+      const existingEntry = acc.find((entry) => entry.date === date);
+
+      if (existingEntry) {
+        existingEntry.JobsApplied += 1;
+      } 
+      else {
+        acc.push({ date, JobsApplied: 1 });
+      }
+
+      return acc;
+    }, [] as Array<{ date: string; JobsApplied: number }>);
+    
+
+    // console.log(applicationsPerMonth);
+    return applicationsPerMonth;
+  } 
+  catch (error) {
+    console.log(error);
+    return null; 
+  }
+};
+
+```
