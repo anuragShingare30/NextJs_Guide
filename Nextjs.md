@@ -1,28 +1,59 @@
-# REACT AND NEXTJS INTRO 😎
+# REACTJS 😎
 
 - Installation and setup
 
 ```js
-
 - npm create vite@latest my-react-app --template react
 - cd my-react-app
 - npm i
 - npm run dev
 localhost:5173
-
 ```
 
-### REACT JS AND REACT HOOKS
-- REACT JS (MAIN BASE FOR FRONTEND)
-- use client  
-- use server 
+## REACT HOOKS
 
-- useFormStatus 
-- useFormState 
-- useEffect
+- To use the different functionality provided by react we need to use **react hooks**
 
-- useMutationHook
-- useQuery Hook
+
+### useState Hook
+
+
+### React State lifting 
+
+
+### useEffect Hook
+
+
+### Conditional Rendering
+
+
+### Event Handling
+
+
+### useContext hook
+
+
+### useRef Hook
+
+
+### useMemo hook
+
+
+
+### useCallback hook
+
+
+
+### React Router
+
+
+
+### React Hook Form
+
+
+
+### React Redux ToolKit
+
 
 
 ### STYLING AND CSS ✨
@@ -32,6 +63,7 @@ localhost:5173
 - Material UI
 - Provider {react-hot-toast}
 - Acertinity UI
+- Shadcn UI
 
 
 # NEXTJS 🔥
@@ -151,7 +183,7 @@ npm install react-hot-toast
 ```js
 
 'use client';
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast'; 
 
 const Providers = ({ children }) => {
   return (
@@ -477,6 +509,9 @@ model Task {
 
 // WHENEVER WE MAKE CHANGES IN OUR SCHEMA RUN THE FOLLOWING CODE :=
 npx prisma migrate dev
+
+// WHENEVER WE DEPLOY AND MIGRATE OUR DATABASE ON SUPABASE. FOR MIGRATION CHANGES RUN,
+npx prisma migrate dev --preview-feature
 
 
 // Prisma Studio is a visual editor for the data in your database.
@@ -944,6 +979,16 @@ CLERK_SECRET_KEY = your_secret_key;
 
 ```
 
+#### IMPORTANT COMPONENTS FOR AUTHENTICATION
+
+```js
+import { SignInButton, UserButton, SignedIn, SignedOut, RedirectToSignUp } from '@clerk/nextjs';
+import { currentUser } from "@clerk/nextjs/server";
+```
+
+- With this UI components we can check for current user authentication status and can add the sign-in and sign-up buttons.
+
+
 - Add (.env.local) IN (.gitignore)
 
 
@@ -1130,6 +1175,7 @@ function LayoutPage({children}){
 
 ```js
 npm i @tanstack/react-query @tanstack/react-query-devtools
+npm i -D @tanstack/eslint-plugin-query
 ```
 
 
@@ -1177,19 +1223,19 @@ export default Providers;
 
 - Now to use the 'useQuery' hook, we need to wrap the 'page.jsx' file. Similar to the one shown below.
 - The function which we are going to use inside an component function, we need to define the same in 'page.jsx'.
-
 - We can define as many as 'preFetchQuery' we will use.
 
 ```js
 // app/Chat/page.jsx
-
+'use client'
 import React from "react";
 import {
     dehydrate,
     HydrationBoundary,
     QueryClient,
+    QueryClientProvider,
 } from '@tanstack/react-query';
-
+ 
 
 async function ChatPage(){
 
@@ -1205,10 +1251,13 @@ async function ChatPage(){
     })
     
     return (
-        <HydrationBoundary state={dehydrate(queryClient)}>
+      <QueryClientProvider client={queryClient}>
+          <HydrationBoundary state={dehydrate(queryClient)}>
             {/* CONTENT/COMPONENTS SHOULD BE WRAP BETWEEN THIS BOUNDARY. */}
             <Component />
         </HydrationBoundary>
+      </QueryClientProvider>
+        
     );
 }
 
@@ -1226,15 +1275,23 @@ async function ChatPage(){
 
 ```js
 'use client'
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 
 async function Todos() {
 
-  const { isPending, data, isError } = useQuery({
+  let queryClient = useQueryClient();
+
+  queryClient.invalidateQueries({ queryKey: ['todos'] });
+
+  const { isPending, data,refetch } = useQuery({
     // HERE 'todos' IS NOTHING BUT AN GLOBAL KEY WHICH WE CAN USE IN OTHER QUERY.
     queryKey: ['todos', item],
     queryFn: () => fetchListItem(item), 
+    select:(todos)=>{
+      todos.map((todo)=>({id:todoId,title:todoTitle}))
+    },
+    enabled: !!data,
   });
 
   if (isPending) {
@@ -1246,8 +1303,10 @@ async function Todos() {
   return (
     <div>
       <ul>
-        {data.map((todo) => (
-          <li key={todo.id}>{todo.title}</li>
+        {data.slice(0,5).map((todo) => (
+          return (
+            <li key={todo.id}>{todo.title}</li>
+          );
         ))}
       </ul>
       <button 
@@ -1260,8 +1319,11 @@ async function Todos() {
   )
 }
 
-export {Todos}
+export {Todos};
 ```
+
+- Use **refetch()** inside the **onSuccess()** method to soft referesh the page.
+- You can use **slice(0,n)** to boil down the total number of response.
 
 #### queryKey : This helps React Query to uniquely identify and cache the result of the query. This means that if the same queryKey is used again, React Query can return the cached result instead of making a new network request.
 
@@ -1277,21 +1339,22 @@ export {Todos}
 
 ```js
 'use client';
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import {createItem} from "../utils/action.jsx";
 
 function TodosPage(){
 
   let [item, setItem] = useState('');
+  let queryClient = useQueryClient();
 
   let {mutate, isPending, data} = useMutation({
-    mutationFn: async (item) =>{ await createItem(item)},
+    mutationFn: async (item) => await createItem(item),
     onSuccess: (data)=>{
       if(!data){
         toast.error("An error occured");
       }
-      return data;
+      queryClient.invalidateQueries({ queryKey: [''] });
     },
   });
 
@@ -1311,12 +1374,14 @@ function TodosPage(){
           );
         })
       }
-
+      <form onSubmit={handleSubmit}>
+      <input type='input' />
       <button 
         type="button"
         disabled={isPending}
         value={isPending ? "Please Wait..." : "Add Item"}
       />
+      </form>
 
     </div>
 
@@ -1329,6 +1394,7 @@ function TodosPage(){
 - We Know that we cannot use react hooks inside server components. Hence, we will declare 'use client' directive at top.
 - With the help of 'useMutation' we can use  server-side logic or components.
 
+**Note :** Use invalidateQueries to load the data quickly and to improve the UX. 
 
 
 ### SEARCH FUNCTIONALITY(READING) USING REACT QUERY
@@ -2050,6 +2116,8 @@ export function inputData(){
 {username:'rohit', email:'xyz@gmail.com', address:'mumbai'}
 ```
 
+- TYPESCRIPT+ZOD , REACT-HOOK-FORM+TYPESCRIPT , TANSTACK-USEFORM
+
 
 
 ### FORM MANAGEMENT USING ZOD AND REACT-HOOK-FORM IN TYPESCRIPT.
@@ -2064,6 +2132,7 @@ npx shadcn-ui@latest add form
 
 
 1. Create a Form schema as an object using zod (basically declaring our input's name).
+
 
 ```js
 import * as z from "zod";
@@ -2204,6 +2273,7 @@ return (
         <button type='submit' className='btn btn-lg text-neutral-900' >Add</button>
     </form>
   </Form>
+  )
 };
 
 ```
