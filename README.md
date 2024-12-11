@@ -17,42 +17,585 @@ localhost:5173
 
 ### useState Hook
 
+- useState is a React Hook that lets you add a state variable to your component.
 
-### React State lifting 
+```js
+// INITIALIZATION
+const [state, setState] = useState(initialState);
+
+// MAIN CODE OF IMPLEMENTATION
+import React from 'react'
+import { useState } from 'react';
+
+export const StateHook = () => {
+    const [count, setcount] = useState(0);
+
+  return (
+    <div >
+      <h1>You have clicked the button {count} times</h1>
+      <button onClick={()=>{setcount(count+1)}}>Add</button>
+      <button onClick={()=>{setcount(count-1)}}>Sub</button>
+    </div>
+  )
+}
+```
 
 
-### useEffect Hook
+
+
+### React State lifting (Passing data from child to parent)
+
+- Passing data from child to parent.
+- If there are two child we can sync them together
+- Here, parent will manage(change and update) the state.
+
+```js
+// CHILD COMPONENT
+import React from 'react'
+
+export const StateLifting = ({name,setName}) => {
+  return (
+    <div className='flex flex-col items-center justify-center p-10'>
+      <h1>Hello my Name is {name}</h1>
+      <input type="text" onChange={(e)=>{setName(e.target.value)}} className='bg-red-300 text-white'/>
+    </div>
+  )
+}
+
+// PARENT COMPONENET
+function App() {
+  const [name, setName] = React.useState("Anurag");
+  const [theme, setTheme] = useState('light');
+
+  return (
+      <div>
+
+      <StateLifting name={name} setName={setName}/>
+      <h1>Hey there my name is {name}</h1>
+
+      </div>
+  );
+}
+```
 
 
 ### Conditional Rendering
 
+1. Ternanry operators
+
+```js
+(state ? if_true_this : if_false_this);
+```
+
+- If state condition is true then perform **if_true_this** else **if_false_this**
+
+2. Logical operators
+
+```js
+(state && perform_this);
+```
+
+- If state condition is true perform the operation
 
 ### Event Handling
 
 
-### useContext hook
+```js
+import React from "react";
+
+export const eventHandling = ()=>{
+
+  function handleSubmit(){
+    alert("form submitted successfully!!!!");
+  }
+
+  return (
+    <div>
+        <form onSubmit={handleSubmit}>
+          <input type="text" onChange={(e)=>{console.log(e.target.value)}}/>
+          <input type="submit" value={"Submit"}/>
+        </form>
+    </div>
+  );
+}
+```
+
+- In form Handling, always use **(e.preventDefault())**
+- Prevent **immediate invokation**
+- **(e.stopPropagation())** -> Stops event bubbling
 
 
-### useRef Hook
+
+### useEffect Hook (Side-effect generator)
+
+- Components  ->  Render/variable changes  ->  Perform some calls/connection/operations/tasks
 
 
-### useMemo hook
+```js
+useEffect(() => {
+  // Set-up function
+
+  return () => {
+    // Clean-up function
+  };
+
+}, [variable]);
+```
+
+-  After every re-render with changed dependencies, React will first run the cleanup function and then run your setup function with the new values.
+- The list of all reactive values referenced inside of the setup code.
+
+
+```js
+import React, { useState } from 'react'
+import { useEffect } from 'react';
+
+export const UseEffect = () => {
+    const [count, setCount] = useState(0);
+    const [total, setTotal] = useState(1);
+
+    function handleCount(){
+        setCount(count+1);
+    }
+    function handleTotal(){
+        setTotal(total+1);
+    }
+
+
+    // // VARIATION1 : RUNS ON EVERY RENDER
+    // useEffect(()=>{
+    //     console.log("I will run on every render");
+    // });
+
+
+    // // VARIATION2 : RUNS ON ONLY FIRST RENDER
+    // useEffect(()=>{
+    //     console.log("I will run on every render");
+    // }, []);
+
+
+    // // VARIATION3 : RUNS WHEN DEPENDENCIES IS CHANGED
+    // useEffect(()=>{
+    //     console.log("I will run on every render");
+    // }, [count]);
+
+
+    // // VARIATION4 : MULTIPLE DEPENDENCIES
+    // useEffect(()=>{
+    //     console.log("I will run on every render");
+    // }, [count,total]);
+
+
+    // // VARIATION5 : ADDING CLEAN-UP FUNCTION
+    // useEffect(()=>{
+    //     console.log("I will run on every render");
+    //     return ()=>{
+    //         console.log("I will run when variable is unmounted");
+    //     }
+    // }, [count,total]);
+
+  return (
+    <div className='flex flex-col p-10 gap-2 items-center'>
+      <button onClick={handleCount} className='border border-black p-1'>Count</button>
+      <p>Count:{count}</p>
+
+      <button onClick={handleTotal} className='border border-black p-1'>Total</button>
+      <p>total:{total}</p>
+    </div>
+  )
+}
+
+```
+
+
+### useContext hook (Props-drilling)
+
+- **Passing data deeply into component tree** is one of the main usage.
+- Parent will provide data and children will provide,consume and update the data.
+
+
+```js
+// PARENT COMPONENT
+import React, { createContext,useState } from "react";
+
+// Create Context
+// Wrap the children inside an provider
+// Pass the value through provider
+// Consume data inside children
+const themeContext = createContext();
+
+function App(){
+  const [theme, setTheme] = useState('light');
+
+  return (
+    <div>
+      <themeContext.Provider value={{theme,setTheme}}>
+          <ChildComponent></ChildComponent>
+      </themeContext.Provider>
+    </div>
+  );
+}
+
+export default App;
+export {themeContext};
+
+
+// CHILD COMPONENT
+import React, { useContext } from 'react'
+import {themeContext} from "../App";
+
+export const UseContext = () => {
+    const {theme, setTheme} = useContext(themeContext);
+
+    function handleTheme(){
+        if(theme == "light"){
+            setTheme("dark");
+        }else{
+            setTheme("light"); 
+        }
+    }
+
+  return (
+      <div 
+        className='border border-black p-4 h-28 w-48 m-10' 
+        style={{backgroundColor:theme == "light" ? "red" : "blue"}}
+        >
+        <button className='border border-black p-1 bg-gray-700 text-white' onClick={handleTheme}>change Theme</button>
+      </div>
+  );
+}
+
+```
 
 
 
-### useCallback hook
+### useRef Hook ()
+
+- useRef is a React Hook that lets you reference a value that's not needed for rendering.
+- Whenever the ref variable is changed the page will not re-render.
+
+
+```js
+const ref = useRef(initialValue)
+```
+
+- When you change the **ref.current** property, React does not re-render your component.
+- Do not write or read **ref.current** during rendering
+
+- {ref.current} can be accesible only inside an event handlers.
+
+**Usage**
+1. COMPARE TO STATE HOOK
+
+- State_var  ->  change  -> Re-render
+- Ref_var    ->  change  -> No re-render
+
+
+2. MANIPULATING DOM WITH REF
+
+
+- We can change the DOM property of a component with useRef hook
+
+```js
+import React, { useRef } from 'react'
+
+const UseRef = () => {
+    const [time,setTime] = React.useState(0);
+    const timeRef = useRef(null);
+    const btnRef = useRef(null);
+
+    function handleStart(){
+        timeRef.current = setInterval(() => {
+            setTime(time => time+1);
+        }, 100);
+    }
+    
+    
+    function handleStop(){
+        clearInterval(timeRef.current);
+        timeRef.current = null;
+    }
+    function handleReset(){
+        handleStop();
+        setTime(0);
+    }
+    // MANIPULATING DOM WITH REF    
+    function handleBtnRef(){
+        btnRef.current.style.backgroundColor = "red";
+    }
+
+  return (
+    <div className='border border-black m-10 p-3 flex flex-col'>
+      <h1 className='text-3xl'>Use Reference Hook</h1>
+      <div className='m-5'>
+        <h1 className="text-2xl">Time: {time} Seconds</h1>
+        <button 
+            className='border border-black p-1' 
+            onClick={handleStart}
+            ref={btnRef}
+            >
+            Start
+        </button>
+        <br/>
+        <button className='border border-black p-1' onClick={handleStop}>
+            Stop
+        </button>
+        <br/>
+        <button className='border border-black p-1' onClick={handleReset}>
+            Reset
+        </button>
+        <br/>
+      </div>
+      <button onClick={handleBtnRef} className='border border-black p-1'>Change color of Start button</button>
+    </div>
+  )
+}
+
+export default UseRef;
+```
+
+
+
+### useMemo hook (prevent expensive operation)
+
+- useMemo is a React Hook that lets you cache the result of a calculation between re-renders.
+
+- In useMemo hook, already calculated value is **cached/store** and when it is call again we will return already store value to optimize performance.
+
+```js
+const cachedValue = useMemo(Value, dependencies);
+```
+
+- The function calculating the value that you want to cache(store).
+- The list of all reactive values referenced inside of the calculateValue code
+
+
+**Usage**
+1. Skipping expensive recalculations 
+2. Skipping re-rendering of components(child coomponent)
+3. Memoizing a function 
+
+
+```js
+import React from 'react'
+import { useMemo } from 'react';
+
+const UseMemo = () => {
+    const [count, setCount] = React.useState(0);
+    let changingValue;
+
+    function increment(){
+        setCount(count+1);
+    }
+
+
+    function expensiveTask(num){
+        console.log("Runs on every expensive operation");
+        for (let i = 0; i <100000000; i++) {};
+        return num*2;
+    }
+    
+    console.time();
+    const testOperation = useMemo(()=>{expensiveTask(4)},[changingValue_that_can_cause_re_render]);
+    const testOperation = expensiveTask(4);
+    console.timeEnd();
+
+  return (
+    <div className='border border-black m-10 p-3 flex flex-col'>
+      <h1 className='text-3xl'>Use Memo hook</h1>
+      
+      <div className='m-10'>
+        <h1 className='text-xl'>Count: {count}</h1>
+        <button className='border border-black m-5' onClick={increment}>Add</button>
+        <p>{testOperation}</p>
+      </div>
+    </div>
+  )
+}
+
+export default UseMemo;
+```
+
+
+### useCallback hook ()
+
+- useCallback is a React Hook that lets you cache a function definition between re-renders.
+
+```js
+const cachedFn = useCallback(fn, dependencies);
+```
+
+
+**Usage**
+1. Skipping re-rendering of components 
+
+- Prevent unnecessary re-rendering of Child component inside an parent component.
+
+```js
+export const ChildComponent = React.memo(({count,setCount})=>{
+    // code here
+});
+```
+- here, we have passed a variable as a props so **React.memo(()=>{})** can help in re-rendering.
+- But, if we passed function it will wom't stop from re-render.
+
+
+2. Prevent re-rendering of expensive operation
+
+- Wrap the expensive function/calculation inside an **useCallback hook**
+- prevent re-creation of function to prevent unnecessary re-rendering of child component.
+- Function re-creation decreases the performance of our web-app
+
+
 
 
 
 ### React Router
 
+- Read docs for more understanding.
+
+
+```js
+import { BrowserRouter, Routes, Route } from "react-router";
+import UseParams from "./components/RouterPages/UseParams";
+import {ReactRouter} from "./components/ReactRouter";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <div>
+        <Routes>
+        <Route path="/home" element={<Home />}>
+          <Route path="profile" element={<Profile />}/>
+        </Route>
+        <Route path="/about" element={<About />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/login/:name" element={<UseParams />} />
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
+      <ReactRouter></ReactRouter>
+      </div>
+    </BrowserRouter>
+  );
+}
+
+
+// REACT-ROUTER PAGE
+import React from 'react'
+import { NavLink,Link,useNavigate } from 'react-router';
+
+// // INSATLLATION
+// npm i react-router
+
+export const ReactRouter = () => {
+    const navigate = useNavigate();
+
+  return (
+    <div className='border border-black p-3 flex flex-row gap-10 m-10'>
+        <NavLink to='/home' className={({isActive}) => isActive ? "text-red-900 font-bold" : "text-black"}>
+            <h1>Home</h1>
+        </NavLink>
+        <NavLink to='/about' className={({isActive}) => isActive ? "text-red-900 font-bold" : "text-black"}>
+            <h1>About</h1>
+        </NavLink>
+
+        <button 
+            className='border border-black p-2 m-3'
+            onClick={()=>{navigate('/dashboard')}}
+            >
+            Move to dash Page
+        </button>  
+    </div>
+  ) 
+}
+
+
+// useParams hook
+import { useParams } from 'react-router'
+
+export default const UseParams = () => {
+    const {name} = useParams();
+  return (
+    <div>
+      <h1>Use Params Hook</h1>
+      <h1 className='text-red-500 font-bold'>{name}</h1>
+    </div>
+  )
+}
+```
+
 
 
 ### React Hook Form
 
+- Read docs for more understanding.
+
+```js
+import React from 'react'
+import { useForm } from "react-hook-form";
 
 
-### React Redux ToolKit
+const UseForm = () => {
+    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
+
+    async function handleFormSubmit(data) {
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        console.log(data);
+    }
+
+    return (
+        <div className='border border-black p-3 m-10 flex flex-col gap-5'>
+            <h1>Use Form Hook</h1>
+            <form onSubmit={handleSubmit(handleFormSubmit)}>
+
+                <div>
+                    <label >Firstname:</label>
+                    <input
+                        className='border border-black m-2'
+                        type="text"
+                        {...register("firstName", { required: true })}
+                        aria-invalid={errors.firstName ? "true" : "false"}
+                    />
+                    {errors.firstName?.type === 'required' && <p role="alert">First name is required</p>}
+                </div>
+
+                <div>
+                    <label >MiddleName:</label>
+                    <input
+                        className='border border-black m-2'
+                        type="text"
+                        {...register("middleName", { required: "MiddleName is required!!!", minLength:{value:5,message:"5 character de!!!"} })}
+                        aria-invalid={errors.middleName ? "true" : "false"}
+                    />
+                    {errors.middleName && <p role="alert">{errors.middleName?.message}</p>}
+                </div>
+
+                <div>
+                    <label >LastName:</label>
+                    <input
+                        className='border border-black m-2'
+                        type="text"
+                        {...register("lastName", { required: "Lastname is required", minLength: { value: 4, message: "Minimum 4 characters are req!!!" }, maxLength: { value: 6, message: "maximum 6 characters is allowed!!!" } })}
+                        aria-invalid={errors.lastName ? "true" : "false"}
+                    />
+                    {errors.lastName && <p role='alert'>{errors.lastName?.message}</p>}
+                </div>
+
+                <button
+                    type="submit"
+                    className='border border-black m-2'
+                    disabled={isSubmitting}
+                >
+                    {isSubmitting ? "Loading..." : "Submit"}
+                </button>
+            </form>
+        </div>
+    )
+}
+
+export default UseForm
+
+```
 
 
 
